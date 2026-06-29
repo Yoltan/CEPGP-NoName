@@ -1242,35 +1242,38 @@ function CEPGP_decay(amount, msg, decayEP, decayGP, fixed)
 		
 		for name, data in pairs(CEPGP_Info.Guild.Roster) do
 			local EP, GP = CEPGP_getEPGP(name, index);
+			local excludedFromEPGP = CEPGP_Info.Guild.Roster[name][9];
 			
-			if decayEP or (not decayEP and not decayGP) then
-				if fixed then
-					EP = math.max(math.floor(tonumber(EP)-amount), 0);	--	If the decay amount is a fixed number
-				else
-					EP = math.max(math.floor(tonumber(EP)*(1-(amount/100))), 0);	--	If it's a percentage
-				end
-			end
-			if decayGP or (not decayEP and not decayGP) then
-				if CEPGP.GP.DecayFactor then
+			if (not excludedFromEPGP) then
+				if decayEP or (not decayEP and not decayGP) then
 					if fixed then
-						GP = math.max(math.floor((tonumber(GP-CEPGP.GP.Min)-amount)+CEPGP.GP.Min), CEPGP.GP.Min);
+						EP = math.max(math.floor(tonumber(EP)-amount), 0);	--	If the decay amount is a fixed number
 					else
-						GP = math.max(math.floor((tonumber(GP-CEPGP.GP.Min)*(1-(amount/100)))+CEPGP.GP.Min), CEPGP.GP.Min);
-					end
-				else
-					if fixed then
-						GP = math.max(math.floor(tonumber(GP)-amount), CEPGP.GP.Min);
-					else
-						GP = math.max(math.floor((tonumber(GP)*(1-(amount/100)))), CEPGP.GP.Min);
+						EP = math.max(math.floor(tonumber(EP)*(1-(amount/100))), 0);	--	If it's a percentage
 					end
 				end
+				if decayGP or (not decayEP and not decayGP) then
+					if CEPGP.GP.DecayFactor then
+						if fixed then
+							GP = math.max(math.floor((tonumber(GP-CEPGP.GP.Min)-amount)+CEPGP.GP.Min), CEPGP.GP.Min);
+						else
+							GP = math.max(math.floor((tonumber(GP-CEPGP.GP.Min)*(1-(amount/100)))+CEPGP.GP.Min), CEPGP.GP.Min);
+						end
+					else
+						if fixed then
+							GP = math.max(math.floor(tonumber(GP)-amount), CEPGP.GP.Min);
+						else
+							GP = math.max(math.floor((tonumber(GP)*(1-(amount/100)))), CEPGP.GP.Min);
+						end
+					end
+				end
+				
+				roster[name] = {
+					[1] = CEPGP_Info.Guild.Roster[name][1],
+					[2] = EP,
+					[3] = GP
+				}
 			end
-			
-			roster[name] = {
-				[1] = CEPGP_Info.Guild.Roster[name][1],
-				[2] = EP,
-				[3] = GP
-			}
 		end
 		
 		for name, data in pairs(roster) do
