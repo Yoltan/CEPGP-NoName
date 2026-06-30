@@ -486,7 +486,7 @@ function CEPGP_initDropdown(frame, initFunction, displayMode, level, menuList)
 end
 
 function CEPGP_ContainsIllegalChar(str)
-	return string.find(str, "[-!$%^&*()_+|~=`{}%[%]:\";<>?,./' ]");
+	return string.find(str, "[!$%^&*()_+|~=`{}%[%]:\";<>?,./' ]");
 end
 
 function CEPGP_addResponse(player, response, roll)
